@@ -16,9 +16,13 @@
 
 package com.example.android.BluetoothChat;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
@@ -216,7 +220,7 @@ public class BluetoothChatService {
      * @param out The bytes to write
      * @see ConnectedThread#write(byte[])
      */
-    public void write(byte[] out) {
+    public void write(byte[] out, int dataType) {
         // Create temporary object
         ConnectedThread r;
         // Synchronize a copy of the ConnectedThread
@@ -225,7 +229,7 @@ public class BluetoothChatService {
             r = mConnectedThread;
         }
         // Perform the write unsynchronized
-        r.write(out);
+        r.write(out, dataType);
     }
 
     /**
@@ -454,6 +458,11 @@ public class BluetoothChatService {
                     // Read from the InputStream
                     bytes = mmInStream.read(buffer);
 
+                	ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+                	DataInputStream dis = new DataInputStream(bis);
+                	int i = dis.readInt();
+                	float f = dis.readFloat();
+                	double d = dis.readDouble();
                     // Send the obtained bytes to the UI Activity
                     mHandler.obtainMessage(BluetoothChat.MESSAGE_READ, bytes, -1, buffer)
                             .sendToTarget();
@@ -471,13 +480,25 @@ public class BluetoothChatService {
          * Write to the connected OutStream.
          * @param buffer  The bytes to write
          */
-        public void write(byte[] buffer) {
+        public void write(byte[] buffer, int dataType) {
             try {
                 mmOutStream.write(buffer);
 
                 // Share the sent message back to the UI Activity
-                mHandler.obtainMessage(BluetoothChat.MESSAGE_WRITE, -1, -1, buffer)
-                        .sendToTarget();
+                switch (dataType) {
+                case Constants.TEXT_DATA:
+                	mHandler.obtainMessage(BluetoothChat.MESSAGE_WRITE, -1, -1, buffer)
+                    .sendToTarget();
+                	break;
+                case Constants.CONTROL_DATA:
+//                	ByteArrayInputStream bis = new ByteArrayInputStream(buffer);
+//                	DataInputStream dis = new DataInputStream(bis);
+//                	int i = dis.readInt();
+//                	float f = dis.readFloat();
+//                	double d = dis.readDouble();
+                	break;
+                }
+                
             } catch (IOException e) {
                 Log.e(TAG, "Exception during write", e);
             }

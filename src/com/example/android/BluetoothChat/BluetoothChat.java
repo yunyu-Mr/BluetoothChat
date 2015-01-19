@@ -40,6 +40,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.*;
 /**
  * This is the main Activity that displays the current chat session.
  */
@@ -164,7 +165,21 @@ public class BluetoothChat extends Activity {
         mKeyUpButton = (Button) findViewById(R.id.button_up);
         mKeyUpButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		sendMessage(Constants.KEY_UP);
+        		int i = 101;
+        		float f = 1111111.123456f;
+        		double d = 12345.6789;
+        		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        		DataOutputStream dout = new DataOutputStream(bout);
+        		try {
+					dout.writeInt(i);
+					dout.writeFloat(f);
+	        		dout.writeDouble(d);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        		byte[] control = bout.toByteArray();
+        		sendMessage(control);
         	}
         });
         mKeyDownButton = (Button) findViewById(R.id.button_down);
@@ -238,12 +253,20 @@ public class BluetoothChat extends Activity {
         if (message.length() > 0) {
             // Get the message bytes and tell the BluetoothChatService to write
             byte[] send = message.getBytes();
-            mChatService.write(send);
+            mChatService.write(send, Constants.TEXT_DATA);
 
             // Reset out string buffer to zero and clear the edit text field
             mOutStringBuffer.setLength(0);
             mOutEditText.setText(mOutStringBuffer);
         }
+    }
+    //Reload sendMessage
+    private final void sendMessage(byte[] buffer){
+        if (mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
+            Toast.makeText(this, R.string.not_connected, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mChatService.write(buffer, Constants.CONTROL_DATA);
     }
 
     // The action listener for the EditText widget, to listen for the return key

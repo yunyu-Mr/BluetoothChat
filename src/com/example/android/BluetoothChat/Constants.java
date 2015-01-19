@@ -9,4 +9,7 @@ public interface Constants {
 	public final String KEY_LEFT = "LEFT";
 	public final String KEY_RIGHT = "RIGHT";
 	
+	//Bluetooth transmite data type
+	public final int TEXT_DATA = 1;
+	public final int CONTROL_DATA = 2;
 }

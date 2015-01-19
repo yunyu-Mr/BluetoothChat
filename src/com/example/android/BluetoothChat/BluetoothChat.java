@@ -167,10 +167,28 @@ public class BluetoothChat extends Activity {
                 sendMessage(message);
             }
         });
-        mKeyUpButton = (Button) findViewById(R.id.button_key_up);
+        mKeyUpButton = (Button) findViewById(R.id.button_up);
         mKeyUpButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
         		sendMessage("Up");
+        	}
+        });
+        mKeyDownButton = (Button) findViewById(R.id.button_down);
+        mKeyDownButton.setOnClickListener( new OnClickListener()   {
+        	public void onClick(View v) {
+        		sendMessage("Down");
+        	}
+        });
+        mKeyLeftButton = (Button) findViewById(R.id.button_left);
+        mKeyLeftButton.setOnClickListener( new OnClickListener()   {
+        	public void onClick(View v) {
+        		sendMessage("Left");
+        	}
+        });
+        mKeyRightButton = (Button) findViewById(R.id.button_right);
+        mKeyRightButton.setOnClickListener( new OnClickListener()   {
+        	public void onClick(View v) {
+        		sendMessage("Right");
         	}
         });
 

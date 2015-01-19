@@ -42,4 +42,7 @@
     <!-- Operation Keys -->
     <string name="key_up">Up</string>
     <string name="key_down">Down</string>
+    <string name="key_left">Left</string>
+    <string name="key_right">Right</string>
+    
 </resources>

@@ -54,12 +54,6 @@ public class BluetoothChat extends Activity {
     public static final int MESSAGE_WRITE = 3;
     public static final int MESSAGE_DEVICE_NAME = 4;
     public static final int MESSAGE_TOAST = 5;
-    
-    //Order sent from the BluetoothChatService Handler
-    public static final int KEY_ORDER_UP = 6;
-    public static final int KEY_ORDER_DOWN = 7;
-    public static final int KEY_ORDER_LEFT = 8;
-    public static final int KEY_ORDER_RIGHT = 9;
 
     // Key names received from the BluetoothChatService Handler
     public static final String DEVICE_NAME = "device_name";
@@ -170,25 +164,25 @@ public class BluetoothChat extends Activity {
         mKeyUpButton = (Button) findViewById(R.id.button_up);
         mKeyUpButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		sendMessage("Up");
+        		sendMessage(Constants.KEY_UP);
         	}
         });
         mKeyDownButton = (Button) findViewById(R.id.button_down);
         mKeyDownButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		sendMessage("Down");
+        		sendMessage(Constants.KEY_DOWN);
         	}
         });
         mKeyLeftButton = (Button) findViewById(R.id.button_left);
         mKeyLeftButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		sendMessage("Left");
+        		sendMessage(Constants.KEY_LEFT);
         	}
         });
         mKeyRightButton = (Button) findViewById(R.id.button_right);
         mKeyRightButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		sendMessage("Right");
+        		sendMessage(Constants.KEY_RIGHT);
         	}
         });
 
@@ -312,6 +306,20 @@ public class BluetoothChat extends Activity {
                 byte[] readBuf = (byte[]) msg.obj;
                 // construct a string from the valid bytes in the buffer
                 String readMessage = new String(readBuf, 0, msg.arg1);
+                switch (readMessage) {
+                case Constants.KEY_UP:
+                	mConversationArrayAdapter.add("Key press:  " + readMessage);
+                	break;
+                case Constants.KEY_DOWN:
+                	mConversationArrayAdapter.add("Key press:  " + readMessage);
+                	break;
+                case Constants.KEY_LEFT:
+                	mConversationArrayAdapter.add("Key press:  " + readMessage);
+                	break;
+                case Constants.KEY_RIGHT:
+                	mConversationArrayAdapter.add("Key press:  " + readMessage);
+                	break;
+                }
                 mConversationArrayAdapter.add(mConnectedDeviceName+":  " + readMessage);
                 break;
             case MESSAGE_DEVICE_NAME:

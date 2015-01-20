@@ -171,6 +171,7 @@ public class BluetoothChat extends Activity {
         		ByteArrayOutputStream bout = new ByteArrayOutputStream();
         		DataOutputStream dout = new DataOutputStream(bout);
         		try {
+        			dout.writeInt(Constants.CONTROL_DATA); //Head
 					dout.writeInt(i);
 					dout.writeFloat(f);
 	        		dout.writeDouble(d);
@@ -251,8 +252,17 @@ public class BluetoothChat extends Activity {
 
         // Check that there's actually something to send
         if (message.length() > 0) {
+        	ByteArrayOutputStream bout = new ByteArrayOutputStream();
+        	DataOutputStream dout = new DataOutputStream(bout);
+        	try {
+        		dout.writeInt(Constants.TEXT_DATA);
+            	dout.writeUTF(message);
+        	} catch(IOException e){
+        		e.printStackTrace();
+        	}
             // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
+            //byte[] send = message.getBytes();
+        	byte[] send = bout.toByteArray();
             mChatService.write(send, Constants.TEXT_DATA);
 
             // Reset out string buffer to zero and clear the edit text field

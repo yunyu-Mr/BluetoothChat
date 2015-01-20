@@ -12,4 +12,9 @@ public interface Constants {
 	//Bluetooth transmite data type
 	public final int TEXT_DATA = 1;
 	public final int CONTROL_DATA = 2;
+	
+	//Send event type
+	public final int KEY_EVENT = 1;
+	public final int MOUSE_KEY = 2;
+	public final int MOUSE_MOTION = 3;
 }

@@ -16,6 +16,7 @@
 
 package com.example.android.BluetoothChat;
 
+import com.example.android.BluetoothChat.Pad.PartitionEventListener;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -31,20 +32,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.MotionEvent;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import java.io.*;
+
 /**
  * This is the main Activity that displays the current chat session.
  */
-public class BluetoothChat extends Activity {
+public class BluetoothChat extends Activity implements 
+PartitionEventListener, OnTouchListener{
     // Debugging
     private static final String TAG = "BluetoothChat";
     private static final boolean D = true;
@@ -74,6 +81,11 @@ public class BluetoothChat extends Activity {
     private Button mKeyDownButton;
     private Button mKeyLeftButton;
     private Button mKeyRightButton;
+    
+    private RelativeLayout mRelativeLayout = null;
+    private Pad padLeft = null;
+    private int viewWidth = 0;
+    private int viewHeight = 0;
 
     // Name of the connected device
     private String mConnectedDeviceName = null;
@@ -165,16 +177,12 @@ public class BluetoothChat extends Activity {
         mKeyUpButton = (Button) findViewById(R.id.button_up);
         mKeyUpButton.setOnClickListener( new OnClickListener()   {
         	public void onClick(View v) {
-        		int i = 101;
-        		float f = 1111111.123456f;
-        		double d = 12345.6789;
+        		int left = 1;
         		ByteArrayOutputStream bout = new ByteArrayOutputStream();
         		DataOutputStream dout = new DataOutputStream(bout);
         		try {
-        			dout.writeInt(Constants.CONTROL_DATA); //Head
-					dout.writeInt(i);
-					dout.writeFloat(f);
-	        		dout.writeDouble(d);
+        			dout.writeInt(Constants.MOUSE_KEY); //Head
+					dout.writeInt(left);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -201,6 +209,20 @@ public class BluetoothChat extends Activity {
         		sendMessage(Constants.KEY_RIGHT);
         	}
         });
+        
+        //Pad controller
+        this.mRelativeLayout = (RelativeLayout) findViewById(R.id.myRelativeLayout);
+//        WindowManager wm = this.getWindowManager();
+        this.viewHeight = 350;
+        this.viewWidth = 350;
+        int padSize = this.viewHeight * 2 / 5;
+        padLeft = new Pad(this);
+		padLeft.setAlpha((float) 0.5);
+		padLeft.setPartition(12);
+		padLeft.setPartitionEventListener(this);
+		padLeft.setOnTouchListener(this);
+		padLeft.setDrawPartitionAll(false);
+		placeView(padLeft, viewWidth/30, viewHeight-padSize-viewHeight/30, padSize, padSize);
 
         // Initialize the BluetoothChatService to perform bluetooth connections
         mChatService = new BluetoothChatService(this, mHandler);
@@ -228,6 +250,17 @@ public class BluetoothChat extends Activity {
         if (mChatService != null) mChatService.stop();
         if(D) Log.e(TAG, "--- ON DESTROY ---");
     }
+    
+    /**
+     * place pad
+     */
+    private void placeView(View v, int left, int top, int width, int height) {
+		RelativeLayout.LayoutParams params = null;
+		params = new RelativeLayout.LayoutParams(width, height);
+		params.leftMargin = left;
+		params.topMargin = top;
+		mRelativeLayout.addView(v, params);
+	}
 
     private void ensureDiscoverable() {
         if(D) Log.d(TAG, "ensure discoverable");
@@ -280,7 +313,7 @@ public class BluetoothChat extends Activity {
     }
 
     // The action listener for the EditText widget, to listen for the return key
-    //监听回车建
+    //鐩戝惉鍥炶溅寤�
     private TextView.OnEditorActionListener mWriteListener =
         new TextView.OnEditorActionListener() {
         public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
@@ -306,8 +339,8 @@ public class BluetoothChat extends Activity {
 
     /**
      * The Handler that gets information back from the BluetoothChatService
-     * mHandler负责处理与后台BluetoothService的通信
-     * 后台Service将msg发到这里来进行处理
+     * mHandler璐熻矗澶勭悊涓庡悗鍙癇luetoothService鐨勯�淇�
+     * 鍚庡彴Service灏唌sg鍙戝埌杩欓噷鏉ヨ繘琛屽鐞�
      */
     private final Handler mHandler = new Handler() {
         @Override
@@ -435,6 +468,35 @@ public class BluetoothChat extends Activity {
             return true;
         }
         return false;
+    }
+    
+    @Override
+    public boolean onTouch(View v, MotionEvent evt) {
+		int count = evt.getPointerCount();
+		if(count==1  &&  v == padLeft ) {
+			if(((Pad) v).onTouch(evt));
+				return true;
+		}
+		return false;
+    }
+    
+    @Override 
+    public void onPartitionEvent(View v, int action, int part) {
+		if(v == padLeft) {
+    		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    		DataOutputStream dout = new DataOutputStream(bout);
+    		try {
+    			dout.writeInt(Constants.Arrow_Key); //Head
+				dout.writeInt(action);
+				dout.writeInt(part);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    		byte[] control = bout.toByteArray();
+    		sendMessage(control);
+			return;
+		}
     }
 
 }

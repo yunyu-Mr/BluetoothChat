@@ -19,24 +19,30 @@ package com.example.android.BluetoothChat;
 import com.example.android.BluetoothChat.Pad.PartitionEventListener;
 import android.app.ActionBar;
 import android.app.Activity;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.KeyEvent;
+
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.KeyEvent;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
+
+import android.view.Window;
+import android.view.WindowManager;
+
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -45,13 +51,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.RelativeLayout;
 
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+
 import java.io.*;
 
 /**
  * This is the main Activity that displays the current chat session.
  */
 public class BluetoothChat extends Activity implements 
-PartitionEventListener, OnTouchListener{
+PartitionEventListener, OnTouchListener, SensorEventListener{
     // Debugging
     private static final String TAG = "BluetoothChat";
     private static final boolean D = true;
@@ -74,6 +85,10 @@ PartitionEventListener, OnTouchListener{
 
     // Layout Views
     private ListView mConversationView;
+    //Sensor Views
+    private TextView mRollText;
+    private TextView mPitchText;
+    
     private EditText mOutEditText;
     private Button mSendButton;
     
@@ -97,6 +112,10 @@ PartitionEventListener, OnTouchListener{
     private BluetoothAdapter mBluetoothAdapter = null;
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
+    
+    //Sensor
+    private SensorManager mSensorManager;
+    private Sensor mOrientationSensor;
 
 
     @Override
@@ -116,6 +135,14 @@ PartitionEventListener, OnTouchListener{
             finish();
             return;
         }
+        
+        //Sensor
+        this.mRollText = (TextView) findViewById(R.id.roll);
+        this.mPitchText = (TextView) findViewById(R.id.pitch);
+        
+        this.mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        this.mOrientationSensor = this.mSensorManager
+        		.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     }
 
     @Override
@@ -150,6 +177,37 @@ PartitionEventListener, OnTouchListener{
               mChatService.start();
             }
         }
+        //Sensor
+        this.mSensorManager.registerListener(this,this.mOrientationSensor,
+        		SensorManager.SENSOR_DELAY_UI);
+    }
+    
+    /**
+     * Orientation Sensor
+     */
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    @SuppressWarnings("deprecation")
+	@Override
+    public void onSensorChanged(SensorEvent event) {
+    	mRollText.setText("x:"+event.values[0]+"  y:"+event.values[1]);
+    	mPitchText.setText("z:"+event.values[2]);
+    	float x = event.values[0];
+    	float y = event.values[1];
+    	float z = event.values[2];
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bout);
+		try {
+			dout.writeInt(Constants.ACCELERATION); //Head
+			dout.writeFloat(x);
+			dout.writeFloat(y);
+			dout.writeFloat(z);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		byte[] control = bout.toByteArray();
+		sendMessage(control);
     }
 
     private void setupChat() {
@@ -235,6 +293,9 @@ PartitionEventListener, OnTouchListener{
     public synchronized void onPause() {
         super.onPause();
         if(D) Log.e(TAG, "- ON PAUSE -");
+        
+        mSensorManager.unregisterListener(this);
+
     }
 
     @Override
@@ -486,7 +547,7 @@ PartitionEventListener, OnTouchListener{
     		ByteArrayOutputStream bout = new ByteArrayOutputStream();
     		DataOutputStream dout = new DataOutputStream(bout);
     		try {
-    			dout.writeInt(Constants.Arrow_Key); //Head
+    			dout.writeInt(Constants.ARROW_KEY); //Head
 				dout.writeInt(action);
 				dout.writeInt(part);
 			} catch (IOException e) {

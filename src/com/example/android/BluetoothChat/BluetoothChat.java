@@ -185,6 +185,11 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     /**
      * Orientation Sensor
      */
+    private final int BALENCE = 0;
+    private final int NEGATIVE = -1;
+    private final int POSITIVE = 1;
+    private int xState = BALENCE;
+    private int yState = BALENCE;
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     @SuppressWarnings("deprecation")
@@ -192,22 +197,37 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     public void onSensorChanged(SensorEvent event) {
     	mRollText.setText("x:"+event.values[0]+"  y:"+event.values[1]);
     	mPitchText.setText("z:"+event.values[2]);
+    	int myXState = this.xState;
+    	int myYState = this.yState;
     	float x = event.values[0];
     	float y = event.values[1];
     	float z = event.values[2];
-		ByteArrayOutputStream bout = new ByteArrayOutputStream();
-		DataOutputStream dout = new DataOutputStream(bout);
-		try {
-			dout.writeInt(Constants.ACCELERATION); //Head
-			dout.writeFloat(x);
-			dout.writeFloat(y);
-			dout.writeFloat(z);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		byte[] control = bout.toByteArray();
-		sendMessage(control);
+    	
+    	if (x<-4.0)	   myXState = this.NEGATIVE;
+    	else if (x>4.0)myXState = this.POSITIVE;
+    	else 		   myXState = this.BALENCE;
+    	
+    	if (y<-4.0) 	myYState = this.NEGATIVE;
+    	else if (y>4.0) myYState = this.POSITIVE;
+    	else 			myYState = this.BALENCE;
+    	
+    	if (myXState != this.xState  ||  myYState != this.yState) {
+    		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+    		DataOutputStream dout = new DataOutputStream(bout);
+    		try {
+    			dout.writeInt(Constants.ACCELERATION); //Head
+    			dout.writeFloat(x);
+    			dout.writeFloat(y);
+    			dout.writeFloat(z);
+    		} catch (IOException e) {
+    			// TODO Auto-generated catch block
+    			e.printStackTrace();
+    		}
+    		byte[] control = bout.toByteArray();
+    		sendMessage(control);
+    	}
+    	this.xState = myXState;
+    	this.yState = myYState;
     }
 
     private void setupChat() {

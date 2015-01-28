@@ -117,6 +117,9 @@ public class BluetoothChat extends Activity{
 //    private Sensor mOrientationSensor;
 
     private Button mPlayButton;
+    // Layout Views
+    private ListView mInfoView;
+    private ArrayAdapter<String> mInfoArrayAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -125,6 +128,14 @@ public class BluetoothChat extends Activity{
 
         // Set up the window layout
         setContentView(R.layout.main);
+        
+//        String[] arr = {"GamingAnywhere Bluetooth client", "Author: SM-Tech!"};
+        mInfoArrayAdapter = new ArrayAdapter<String>(this, R.layout.message);
+        mInfoView = (ListView)findViewById(R.id.info_listview);
+        this.mInfoArrayAdapter.add("GA Bluetooth control gaming client");
+        this.mInfoArrayAdapter.add("SYSU-netlab");
+        this.mInfoArrayAdapter.add("Author: Saoming");
+        mInfoView.setAdapter(this.mInfoArrayAdapter);
         
         this.mPlayButton = (Button) findViewById(R.id.button_play);
         this.mPlayButton.setOnClickListener( new OnClickListener()   {

@@ -72,8 +72,6 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     // Member object for the chat services
     private BluetoothChatService mChatService = null;
     
-    // Layout Views
-//    private ListView mConversationView;
     //Sensor Views
     private TextView mAccXText;
     private TextView mAccYText;
@@ -116,6 +114,7 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
             finish();
             return;
         }
+        
         //Sensor
         this.mAccXText = (TextView) findViewById(R.id.accelerometer_x);
         this.mAccYText = (TextView) findViewById(R.id.accelerometer_y);
@@ -447,10 +446,6 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
 	@Override
     public boolean onTouch(View v, MotionEvent evt) {
 		int count = evt.getPointerCount();
-		int action = evt.getActionMasked();
-		if (v == mMouseLeftButton) 
-			return handleButtonTouch(Constants.MOUSE_KEY, action, SDL2.Button.LEFT, 0);
-		
 		if(count==1  &&  v == padLeft ) {
 			if(((Pad) v).onTouch(evt));
 				return true;

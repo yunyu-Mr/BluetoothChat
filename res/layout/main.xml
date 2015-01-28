@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-<!--  
+
     <ListView
-        android:id="@+id/in"
+        android:id="@+id/info_listview"
         android:layout_width="match_parent"
-        android:layout_height="151dp"
-        android:layout_weight="0.33"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll" />
--->
+        android:layout_height="wrap_content"
+        android:layout_weight="0.9" >
+    </ListView>
+
     <Button
         android:id="@+id/button_play"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="65dp"
         android:layout_gravity="bottom"
-        android:text="play" />
+        android:text="@string/play" 
+        android:textSize="20sp"/>
 
     <!--
     <TextView
@@ -93,8 +91,7 @@
             android:layout_below="@+id/button_right"
             android:layout_toLeftOf="@+id/button_right"
             android:text="@string/key_down" />
-
-    </RelativeLayout>
-    -->
+            </RelativeLayout>
+            -->
 
 </LinearLayout>

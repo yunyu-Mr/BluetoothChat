@@ -1093,13 +1093,13 @@ containing a value of this type.
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_settings=0x7f05004e;
+        public static final int action_settings=0x7f05004f;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
         public static final int button_esc=0x7f050041;
         public static final int button_leftclick=0x7f05003f;
-        public static final int button_play=0x7f05004a;
+        public static final int button_play=0x7f05004b;
         public static final int button_rightclick=0x7f050040;
         public static final int button_scan=0x7f050049;
         public static final int button_space=0x7f050042;
@@ -1108,7 +1108,7 @@ containing a value of this type.
         public static final int default_activity_button=0x7f050028;
         public static final int dialog=0x7f05000e;
         public static final int disableHome=0x7f050008;
-        public static final int discoverable=0x7f05004d;
+        public static final int discoverable=0x7f05004e;
         public static final int dropdown=0x7f05000f;
         public static final int edit_query=0x7f050030;
         public static final int end=0x7f050013;
@@ -1119,7 +1119,8 @@ containing a value of this type.
         public static final int icon=0x7f05002a;
         public static final int ifRoom=0x7f05000a;
         public static final int image=0x7f050027;
-        public static final int insecure_connect_scan=0x7f05004c;
+        public static final int info_listview=0x7f05004a;
+        public static final int insecure_connect_scan=0x7f05004d;
         public static final int listMode=0x7f050001;
         public static final int list_item=0x7f050029;
         public static final int middle=0x7f050012;
@@ -1142,7 +1143,7 @@ containing a value of this type.
         public static final int search_plate=0x7f050036;
         public static final int search_src_text=0x7f050037;
         public static final int search_voice_btn=0x7f05003b;
-        public static final int secure_connect_scan=0x7f05004b;
+        public static final int secure_connect_scan=0x7f05004c;
         public static final int shortcut=0x7f05002e;
         public static final int showCustom=0x7f050007;
         public static final int showHome=0x7f050004;
@@ -1263,45 +1264,46 @@ containing a value of this type.
         /**  Description of a share target (both in the list of such or the default share button) in a ShareActionProvider (share UI). [CHAR LIMIT=NONE] 
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
-        public static final int action_settings=0x7f0a0024;
+        public static final int action_settings=0x7f0a0025;
         public static final int app_name=0x7f0a000d;
-        public static final int bt_not_enabled_leaving=0x7f0a0010;
-        public static final int button_esc=0x7f0a0029;
+        public static final int bt_not_enabled_leaving=0x7f0a0011;
+        public static final int button_esc=0x7f0a002a;
         /**  Play panel 
          */
-        public static final int button_leftclick=0x7f0a0026;
-        public static final int button_rightclick=0x7f0a0027;
-        public static final int button_scan=0x7f0a001a;
-        public static final int button_space=0x7f0a0028;
-        public static final int discoverable=0x7f0a001d;
-        public static final int hello_world=0x7f0a0023;
-        public static final int insecure_connect=0x7f0a001c;
-        public static final int key_down=0x7f0a001f;
-        public static final int key_left=0x7f0a0020;
-        public static final int key_right=0x7f0a0021;
+        public static final int button_leftclick=0x7f0a0027;
+        public static final int button_rightclick=0x7f0a0028;
+        public static final int button_scan=0x7f0a001b;
+        public static final int button_space=0x7f0a0029;
+        public static final int discoverable=0x7f0a001e;
+        public static final int hello_world=0x7f0a0024;
+        public static final int insecure_connect=0x7f0a001d;
+        public static final int key_down=0x7f0a0020;
+        public static final int key_left=0x7f0a0021;
+        public static final int key_right=0x7f0a0022;
         /**  Operation Keys 
          */
-        public static final int key_up=0x7f0a001e;
-        public static final int none_found=0x7f0a0017;
-        public static final int none_paired=0x7f0a0016;
-        public static final int not_connected=0x7f0a000f;
-        /**  DeviceListActivity 
-         */
-        public static final int scanning=0x7f0a0014;
-        /**  Options Menu 
-         */
-        public static final int secure_connect=0x7f0a001b;
-        public static final int select_device=0x7f0a0015;
+        public static final int key_up=0x7f0a001f;
+        public static final int none_found=0x7f0a0018;
+        public static final int none_paired=0x7f0a0017;
+        public static final int not_connected=0x7f0a0010;
         /**  BluetoothChat 
          */
-        public static final int send=0x7f0a000e;
-        public static final int title_activity_play=0x7f0a0025;
-        public static final int title_activity_player=0x7f0a0022;
-        public static final int title_connected_to=0x7f0a0012;
-        public static final int title_connecting=0x7f0a0011;
-        public static final int title_not_connected=0x7f0a0013;
-        public static final int title_other_devices=0x7f0a0019;
-        public static final int title_paired_devices=0x7f0a0018;
+        public static final int play=0x7f0a000e;
+        /**  DeviceListActivity 
+         */
+        public static final int scanning=0x7f0a0015;
+        /**  Options Menu 
+         */
+        public static final int secure_connect=0x7f0a001c;
+        public static final int select_device=0x7f0a0016;
+        public static final int send=0x7f0a000f;
+        public static final int title_activity_play=0x7f0a0026;
+        public static final int title_activity_player=0x7f0a0023;
+        public static final int title_connected_to=0x7f0a0013;
+        public static final int title_connecting=0x7f0a0012;
+        public static final int title_not_connected=0x7f0a0014;
+        public static final int title_other_devices=0x7f0a001a;
+        public static final int title_paired_devices=0x7f0a0019;
     }
     public static final class style {
         /**  Mimic text appearance in select_dialog_item.xml 

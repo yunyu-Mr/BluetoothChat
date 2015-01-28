@@ -12,6 +12,7 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.MotionEvent;
 
+import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -72,18 +73,22 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     private BluetoothChatService mChatService = null;
     
     // Layout Views
-    private ListView mConversationView;
+//    private ListView mConversationView;
     //Sensor Views
     private TextView mAccXText;
     private TextView mAccYText;
     
-    private EditText mOutEditText;
-    private Button mSendButton;
-    
-    private Button mKeyUpButton;
-    private Button mKeyDownButton;
-    private Button mKeyLeftButton;
-    private Button mKeyRightButton;
+//    private EditText mOutEditText;
+//    private Button mSendButton;
+//    
+//    private Button mKeyUpButton;
+//    private Button mKeyDownButton;
+//    private Button mKeyLeftButton;
+//    private Button mKeyRightButton;
+    private Button mMouseLeftButton;
+    private Button mMouseRightButton;
+    private Button mEscButton;
+    private Button mSpaceButton;
     
     private RelativeLayout mRelativeLayout = null;
     private Pad padLeft = null;
@@ -152,6 +157,41 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
               mChatService.start();
             }
         }
+        
+        this.mMouseLeftButton = (Button)findViewById(R.id.button_leftclick);
+        this.mMouseLeftButton.setOnTouchListener(new OnTouchListener() {
+        	@Override
+        	public boolean onTouch(View v, MotionEvent evt) {
+        		int action = evt.getActionMasked();
+        		return handleButtonTouch(Constants.MOUSE_KEY, action, SDL2.Button.LEFT, 0);
+        	}
+        });
+        this.mMouseRightButton = (Button)findViewById(R.id.button_rightclick);
+        this.mMouseRightButton.setOnTouchListener(new OnTouchListener() {
+        	@Override
+        	public boolean onTouch(View v, MotionEvent evt) {
+        		int action = evt.getActionMasked();
+        		return handleButtonTouch(Constants.MOUSE_KEY, action, SDL2.Button.RIGHT, 0);
+        	}
+        });
+        this.mEscButton = (Button)findViewById(R.id.button_esc) ;
+        this.mEscButton.setOnClickListener(new OnClickListener() {
+        	@Override
+        	public void onClick(View v) {
+        		int action = MotionEvent.ACTION_DOWN;
+        		handleButtonTouch(Constants.KEY_EVENT, action, SDL2.Scancode.ESCAPE, SDL2.Keycode.ESCAPE);
+        		action = MotionEvent.ACTION_UP;
+        		handleButtonTouch(Constants.KEY_EVENT, action, SDL2.Scancode.ESCAPE, SDL2.Keycode.ESCAPE);
+        	}
+        });
+        this.mSpaceButton = (Button)findViewById(R.id.button_space) ;
+        this.mSpaceButton.setOnTouchListener(new OnTouchListener() {
+        	@Override
+        	public boolean onTouch(View v, MotionEvent evt) {
+        		int action = evt.getActionMasked();
+        		return handleButtonTouch(Constants.KEY_EVENT, action, SDL2.Scancode.SPACE, SDL2.Keycode.SPACE);
+        	}
+        });
         //Sensor
         this.mSensorManager.registerListener(this,this.mOrientationSensor,
         		SensorManager.SENSOR_DELAY_UI);
@@ -212,6 +252,20 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
 		params.topMargin = top;
 		mRelativeLayout.addView(v, params);
 	}
+    
+    private void sendKeyCode(int head, int code) {
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bout);
+		try {
+			dout.writeInt(head); //Head
+			dout.writeInt(code);  
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		byte[] control = bout.toByteArray();
+		sendMessage(control);
+    }
     
     /**
      * Orientation Sensor
@@ -389,14 +443,36 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
         mChatService.connect(device, secure);
     }
     
-    @Override
+
+	@Override
     public boolean onTouch(View v, MotionEvent evt) {
 		int count = evt.getPointerCount();
+		int action = evt.getActionMasked();
+		if (v == mMouseLeftButton) 
+			return handleButtonTouch(Constants.MOUSE_KEY, action, SDL2.Button.LEFT, 0);
+		
 		if(count==1  &&  v == padLeft ) {
 			if(((Pad) v).onTouch(evt));
 				return true;
 		}
 		return false;
+    }
+    
+    private boolean handleButtonTouch(int keyEvt, int action, int scancode, int keycode){
+		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+		DataOutputStream dout = new DataOutputStream(bout);
+		try {
+			dout.writeInt(keyEvt); //Head
+			dout.writeInt(action);
+			dout.writeInt(scancode);
+			dout.writeInt(keycode);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		byte[] control = bout.toByteArray();
+		sendMessage(control);
+    	return false;
     }
     
     @Override 

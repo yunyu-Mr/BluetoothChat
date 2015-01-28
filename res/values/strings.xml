@@ -51,4 +51,9 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_play">PlayActivity</string>
 
+    <!-- Play panel -->
+    <string name="button_leftclick">Left</string>
+    <string name="button_rightclick">Right</string>
+    <string name="button_space">Space</string>
+    <string name="button_esc">Esc</string>
 </resources>

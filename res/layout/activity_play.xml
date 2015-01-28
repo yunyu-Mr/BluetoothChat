@@ -24,6 +24,42 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/accelerometer_x" />
+
+        <Button
+            android:id="@+id/button_leftclick"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="39dp"
+            android:layout_marginLeft="68dp"
+            android:layout_toRightOf="@+id/accelerometer_y"
+            android:text="@string/button_leftclick" />
+
+        <Button
+            android:id="@+id/button_rightclick"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/button_leftclick"
+            android:layout_toRightOf="@+id/button_leftclick"
+            android:text="@string/button_rightclick" />
+
+        <Button
+            android:id="@+id/button_esc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/button_esc" />
+
+        <Button
+            android:id="@+id/button_space"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/button_leftclick"
+            android:layout_alignBottom="@+id/button_leftclick"
+            android:layout_alignRight="@+id/button_leftclick"
+            android:layout_marginRight="116dp"
+            android:text="@string/button_space" />
         
     </RelativeLayout>
 

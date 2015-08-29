@@ -272,13 +272,21 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     private final int BALENCE = 0;
     private final int NEGATIVE = -1;
     private final int POSITIVE = 1;
+    private final int RATE = 6;   //control send rate
     private int xState = BALENCE;
     private int yState = BALENCE;
+    private int cnt = 0;
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {}
     @SuppressWarnings("deprecation")
 	@Override
     public void onSensorChanged(SensorEvent event) {
+    	if (cnt == RATE) {
+    		cnt = 0;
+    	} else {
+    		cnt++;
+    		return;
+    	}
     	this.mAccXText.setText("x:" + event.values[0]);
     	this.mAccYText.setText("y:" + event.values[1]);
     	int myXState = this.xState;
@@ -287,15 +295,15 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     	float y = event.values[1];
     	float z = event.values[2];
     	
-    	if (x<-4.0)	   myXState = this.NEGATIVE;
-    	else if (x>4.0)myXState = this.POSITIVE;
-    	else 		   myXState = this.BALENCE;
+//    	if (x<-4.0)	   myXState = this.NEGATIVE;
+//    	else if (x>4.0)myXState = this.POSITIVE;
+//    	else 		   myXState = this.BALENCE;
+//    	
+//    	if (y<-4.0) 	myYState = this.NEGATIVE;
+//    	else if (y>4.0) myYState = this.POSITIVE;
+//    	else 			myYState = this.BALENCE;
     	
-    	if (y<-4.0) 	myYState = this.NEGATIVE;
-    	else if (y>4.0) myYState = this.POSITIVE;
-    	else 			myYState = this.BALENCE;
-    	
-    	if (myXState != this.xState  ||  myYState != this.yState) {
+//    	if (myXState != this.xState  ||  myYState != this.yState) {
     		ByteArrayOutputStream bout = new ByteArrayOutputStream();
     		DataOutputStream dout = new DataOutputStream(bout);
     		try {
@@ -309,9 +317,9 @@ PartitionEventListener, OnTouchListener, SensorEventListener{
     		}
     		byte[] control = bout.toByteArray();
     		sendMessage(control);
-    	}
-    	this.xState = myXState;
-    	this.yState = myYState;
+//    	}
+//    	this.xState = myXState;
+//    	this.yState = myYState;
     }
     
     private void ensureDiscoverable() {
